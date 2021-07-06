@@ -43,6 +43,26 @@ app.get("/authors/:number", (req, res) => {
 // Exercice 3 
 
 
+app.get("/authors/:number/books", (req, res) => {
+    let number = req.params.number;
+    res.send(`${authors[number].books}`)
+});
+
+// Exercice 4 
+
+app.get("/json/authors/:id", (req, res) => {
+    let value = req.params.id;
+    res.json({name: authors[value].name,
+    nationality: authors[value].nationality})
+
+})
+
+app.get("/json/authors/:id/books", (req, res) => {
+    let value = req.params.id;
+    res.json({books: authors[value].books})
+
+})
+
 
 
 
