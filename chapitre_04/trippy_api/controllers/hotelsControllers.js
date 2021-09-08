@@ -1,4 +1,4 @@
-const hotels = require("../json/hotels.json");
+let hotels = require("../json/hotels.json");
 const expressValidator = require("express-validator");
 
 const getHotels = (req, res) => {
@@ -19,21 +19,56 @@ const getHotelById = (req, res) => {
 
 const addHotel = (req, res) => {
   const errors = expressValidator.validationResult(req);
-  console.log("error", errors);
+  console.log(errors);
+
   if (errors.isEmpty() === false) {
-    res.status(400).json({ messages: "it's fail" });
-    return;
-  } else {
-    hotels.push(req.body);
-    res.json({
-      success: true,
-      messages: "hotel will be add",
+    return res.status(400).json({
+      message: "error",
+      errors: errors.array(),
     });
   }
+
+  hotels.push(req.body);
+  res.json({
+    success: true,
+    messages: "hotel will be add",
+    data: hotels,
+  });
+};
+
+const changeHotelName = (req, res) => {
+  let id = req.params.id;
+  const newName = req.query.name;
+  console.log(newName);
+  const hotelById = hotels.findIndex((hotel) => hotel.id.toString() === id);
+  hotels[hotelById].name = newName;
+
+  res.json({
+    status: "OK",
+  });
+};
+
+const deleteHotel = (req, res) => {
+  let id = req.params.id;
+  let hotelToDelete = hotels.find((hotel) => hotel.id.toString() === id);
+  console.log("hotels before : ", hotels);
+  console.log(
+    "hotels to delete",
+    hotels.filter((hotel) => hotel != hotelToDelete)
+  );
+  hotels = hotels.filter((hotel) => hotel != hotelToDelete);
+  console.log("hotels after : ", hotels);
+
+  res.json({
+    status: "Delete done",
+    data: hotels,
+  });
 };
 
 module.exports = {
   getHotels: getHotels,
   getHotelById: getHotelById,
   addHotel: addHotel,
+  changeHotelName: changeHotelName,
+  deleteHotel: deleteHotel,
 };

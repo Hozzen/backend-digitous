@@ -9,15 +9,20 @@ const { body } = require("express-validator");
 - `hasPool` de type `Boolean`
 - `priceCategory` de type `Number` qui ira de 1 à 3*/
 
-const hotelCheck = body("name").isString();
-body("address").isString();
-body("city").isString();
-body("country").isString();
-body("stars").isInt({ min: 1, max: 5 });
-body("hasSpa").isBoolean();
-body("hasPool").isBoolean();
-body("priceCategory").isInt({ min: 1, max: 3 });
+const hotelCheck = () => [
+  body("name").notEmpty().isString(),
+  body("address").notEmpty().isString(),
+  body("city").notEmpty().isString(),
+  body("country").notEmpty().isString(),
+  body("stars").notEmpty().isInt({ min: 1, max: 5 }).not().isString(),
+  body("hasSpa").notEmpty().isBoolean(),
+  body("hasPool").notEmpty().isBoolean(),
+  body("priceCategory").notEmpty().isInt({ min: 1, max: 3 }).not().isString(),
+];
+
+const newNameHotelCheck = () => [body("name").notEmpty().isString()];
 
 module.exports = {
   hotelCheck: hotelCheck,
+  newNameHotelCheck: newNameHotelCheck,
 };
